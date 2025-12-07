@@ -9,7 +9,8 @@ const authRoutes = require("./routes/auth");
 const tripsRoutes = require("./routes/trips");
 const tripDetailsRoutes = require("./routes/tripDetails");
 const tripAIRoutes = require("./routes/tripAI");
-
+const placesRoutes = require("./routes/places");
+const citiesRoutes = require("./routes/cities");
 
 
 // Firebase Admin SDK
@@ -42,6 +43,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/trips", tripsRoutes(db, bucket)); // ✅ Pass db & bucket here
 app.use("/api/tripsdetails", tripDetailsRoutes);
 app.use("/api/tripai", tripAIRoutes);
+app.use("/api/places", placesRoutes(db));  
+app.use("/api/cities", citiesRoutes(db));
+
 
 // Error handler
 app.use((err, req, res, next) => {

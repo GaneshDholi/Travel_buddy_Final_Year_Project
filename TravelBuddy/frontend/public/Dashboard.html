@@ -10,79 +10,117 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
 </head>
 
 <body>
   <div class="dashboard-container">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="logo">GoTravels</div>
+      <div class="logo">
+        <img src="../src/icons/GoTravels.png" alt="logo" height="71px" width="168px">
+      </div>
       <nav class="navigation">
         <ul>
           <li><a href="dashboard.html" class="active"><i class="bx bxs-dashboard"></i> Dashboard</a></li>
           <li><a href="chat.html"><i class="bx bxs-chat"></i> Chat with AI</a></li>
-          <li><a href="#"><i class="bx bxs-map-alt"></i> Live Trip</a></li>
+          <li><a href="./planTrip.html"><i class="bx bxs-map-alt"></i> Plan new Trip</a></li>
           <li><a href="hotel-search.html"><i class="bx bxs-hotel"></i> Hotel Search</a></li>
           <li><a href="travel-guide.html"><i class="bx bxs-book-content"></i> Travel Guides</a></li>
         </ul>
       </nav>
 
-      <div class="profile">
-        <img src="https://i.pravatar.cc/150?img=3" alt="Profile Picture" class="profile-img" />
+      <div class="profile" id="profile-trigger">
+        <img id="profile-img" src="https://i.pravatar.cc/150?img=3" alt="Profile Picture" class="profile-img" />
         <div class="profile-info">
-          <span class="profile-name">Dinesh Dhull</span>
-          <span class="profile-handle">@dinesh_331</span>
+          <span class="profile-name" id="profile-name">Loading...</span>
+          <span class="profile-handle" id="profile-handle">@user</span>
+        </div>
+
+        <!-- Dropdown / Dialog -->
+        <div class="profile-menu hidden" id="profile-menu">
+          <button class="profile-menu-item" id="btn-profile">
+            <i class="bx bx-user"></i>
+            My Profile
+          </button>
+
+          <button class="profile-menu-item" id="btn-settings">
+            <i class="bx bx-cog"></i>
+            Settings
+          </button>
+
+          <div class="menu-divider"></div>
+
+          <button class="profile-menu-item logout" id="btn-logout">
+            <i class="bx bx-log-out"></i>
+            Logout
+          </button>
         </div>
       </div>
+
     </aside>
 
     <!-- Main content -->
+    <!-- Main content -->
     <main class="main-content">
+      <!-- ❌ Screenshot me yeh header nahi hai, so remove/hide -->
+      <!--
       <div class="header-with-button">
         <h1>Dashboard</h1>
         <a href="trip-planner.html" class="btn-plan-trip">
           <i class="bx bx-plus"></i> Plan a new trip
         </a>
       </div>
+      -->
 
-      <!-- Recently Viewed Trips -->
-      <section class="trip-section">
-        <h2>Recently viewed and upcoming</h2>
-        <div class="horizontal-scroll" id="recent-trips">
-          <!-- Trips will load here dynamically -->
-          <p style="color:gray;font-size:14px;">Loading trips...</p>
-        </div>
-      </section>
+      <!-- DASHBOARD LOADER -->
+      <div id="dashboard-loader" class="dashboard-loader">
+        <dotlottie-wc src="https://lottie.host/cd75186a-5e82-42f3-98d3-db3de07d8c01/8CeI9ISOhT.lottie"
+          style="width: 500px; height: 500px" autoplay loop>
+        </dotlottie-wc>
+        <p style="color:#666; font-size:14px;">Finding the best trips for you...</p>
+      </div>
 
-      <!-- Popular Destinations -->
-      <section class="explore-section">
-        <h2>Explore popular destinations</h2>
-        <div class="destination-grid" id="popular-trips">
-          <!-- Popular destinations will load here dynamically -->
-        </div>
-      </section>
+      <div id="dashboard-inner">
+        <!-- Recently Viewed Trips -->
+        <section class="trip-section">
+          <h2>Recently viewed and upcoming</h2>
+          <div class="horizontal-scroll" id="recent-trips">
+            <p style="color:gray;font-size:14px;">Loading trips...</p>
+          </div>
+        </section>
 
-      <!-- Footer -->
-      <footer class="footer">
-        <div class="footer-column">
-          <h3>About us</h3>
-          <a href="#">Our story</a>
-          <a href="#">Careers</a>
-          <a href="#">Press</a>
-        </div>
-        <div class="footer-column">
-          <h3>Legal</h3>
-          <a href="#">Terms of use</a>
-          <a href="#">Privacy policy</a>
-          <a href="#">Cookie policy</a>
-        </div>
-        <div class="footer-column">
-          <h3>Information</h3>
-          <a href="#">FAQ</a>
-          <a href="#">Contact us</a>
-          <a href="#">Help center</a>
-        </div>
-      </footer>
+        <!-- Popular Destinations -->
+        <section class="explore-section">
+          <h2>Explore popular destinations</h2>
+          <div class="destination-grid" id="popular-trips">
+            <!-- Popular destinations will load here dynamically -->
+          </div>
+        </section>
+
+        <!-- Footer (keep as-is) -->
+        <footer class="footer">
+          <div class="footer-column">
+            <h3>About us</h3>
+            <a href="#">Our story</a>
+            <a href="#">Careers</a>
+            <a href="#">Press</a>
+          </div>
+          <div class="footer-column">
+            <h3>Legal</h3>
+            <a href="#">Terms of use</a>
+            <a href="#">Privacy policy</a>
+            <a href="#">Cookie policy</a>
+          </div>
+          <div class="footer-column">
+            <h3>Information</h3>
+            <a href="#">FAQ</a>
+            <a href="#">Contact us</a>
+            <a href="#">Help center</a>
+          </div>
+        </footer>
+      </div>
     </main>
   </div>
 
@@ -91,8 +129,20 @@
   <!-- Firebase Auth -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <!-- Initialize Firebase -->
-  
-  
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCCiGVhuR5Uu_veoBjLD3fg7Abc4OFeQjo",
+      authDomain: "milan-4590e.firebaseapp.com",
+      projectId: "milan-4590e",
+      storageBucket: "milan-4590e.appspot.com",
+      messagingSenderId: "id",
+      appId: "appid"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
 
   <script src="./script.js"></script>
 </body>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plan a new Trip</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Boxicons for sidebar icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="../css/planTrip.css" />
+</head>
+
+<body>
+    <!-- CITY SELECTION MODAL -->
+    <div id="city-modal" class="city-modal hidden">
+        <div class="city-modal-card">
+            <h2>Where are you going?</h2>
+            <p class="city-subtitle">
+                Choose a destination to start planning your trip.
+            </p>
+
+            <div class="city-input-wrapper">
+                <input id="city-input" type="text" placeholder="Select a city" autocomplete="off" readonly />
+
+                <!-- DROPDOWN WITH SUGGESTIONS -->
+                <div id="city-suggestions" class="city-suggestions hidden"></div>
+            </div>
+
+            <div class="city-modal-actions">
+                <button id="city-cancel-btn" class="btn-ghost">Cancel</button>
+                <button id="city-confirm-btn" class="btn-primary">
+                    Start planning
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRIP DURATION MODAL (1–15 DAYS) -->
+    <div id="duration-modal" class="city-modal hidden">
+        <div class="city-modal-card">
+            <h2>How long is this trip?</h2>
+            <p class="city-subtitle">
+                Choose number of days (max 15). We’ll use this to pre-fill dates and
+                auto-create an itinerary.
+            </p>
+
+            <div class="field">
+                <label for="trip-duration">Trip length</label>
+                <select id="trip-duration">
+                    <option value="0">I’ll decide later</option>
+                    <option value="1">1 day</option>
+                    <option value="2">2 days</option>
+                    <option value="3">3 days</option>
+                    <option value="4">4 days</option>
+                    <option value="5">5 days</option>
+                    <option value="6">6 days</option>
+                    <option value="7">7 days</option>
+                    <option value="8">8 days</option>
+                    <option value="9">9 days</option>
+                    <option value="10">10 days</option>
+                    <option value="11">11 days</option>
+                    <option value="12">12 days</option>
+                    <option value="13">13 days</option>
+                    <option value="14">14 days</option>
+                    <option value="15">15 days</option>
+                </select>
+            </div>
+
+            <div class="city-modal-actions">
+                <button id="duration-skip-btn" class="btn-ghost">Skip</button>
+                <button id="duration-save-btn" class="btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DATES MODAL -->
+    <div id="dates-modal" class="city-modal hidden">
+        <div class="city-modal-card">
+            <h2>Select your dates</h2>
+            <p class="city-subtitle">
+                Pick a start date. We’ll auto-fill the end date using your chosen trip
+                length (you can change it).
+            </p>
+
+            <div class="dates-grid">
+                <div class="field">
+                    <label for="start-date">Start date</label>
+                    <input id="start-date" type="date" />
+                </div>
+                <div class="field">
+                    <label for="end-date">End date</label>
+                    <input id="end-date" type="date" />
+                </div>
+            </div>
+
+            <p id="dates-summary" class="city-subtitle"></p>
+
+            <div class="city-modal-actions">
+                <button id="dates-cancel-btn" class="btn-ghost">Cancel</button>
+                <button id="dates-save-btn" class="btn-primary">Save dates</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- COLLAB / MEMBERS MODAL -->
+    <div id="members-modal" class="city-modal hidden">
+        <div class="city-modal-card">
+            <h2>Share this trip</h2>
+            <p class="city-subtitle">
+                Generate a link you can send on WhatsApp / email to plan together.
+            </p>
+
+            <div class="field">
+                <label for="invite-email">Tripmate email</label>
+                <input id="invite-email" type="email" placeholder="name@example.com" />
+            </div>
+
+            <div class="field">
+                <label for="invite-message">Message (optional)</label>
+                <textarea id="invite-message" rows="3" placeholder="Hey, join my trip on GoTravels!"></textarea>
+            </div>
+
+            <div id="invite-result" class="invite-result"></div>
+
+            <div class="city-modal-actions">
+                <button id="members-cancel-btn" class="btn-ghost">Close</button>
+                <button id="members-send-btn" class="btn-primary">
+                    Generate link
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout">
+        <!-- DASHBOARD STYLE COLLAPSIBLE SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="../src/icons/GoTravels.png" alt="logo" height="56" width="145" />
+            </div>
+            <nav class="navigation">
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <i class="bx bxs-dashboard"></i>
+                            <span class="label">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="chat.html">
+                            <i class="bx bxs-chat"></i>
+                            <span class="label">Chat with AI</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="planTrip.html" class="active">
+                            <i class="bx bxs-map-alt"></i>
+                            <span class="label">Plan new Trip</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="hotel-search.html">
+                            <i class="bx bxs-hotel"></i>
+                            <span class="label">Hotel Search</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="travel-guide.html">
+                            <i class="bx bxs-book-content"></i>
+                            <span class="label">Travel Guides</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="profile" id="profile-trigger">
+                <img id="profile-img" src="https://i.pravatar.cc/150?img=3" alt="Profile Picture" class="profile-img" />
+                <div class="profile-info">
+                    <span class="profile-name" id="profile-name">Loading...</span>
+                    <span class="profile-handle" id="profile-handle">@user</span>
+                </div>
+
+                <!-- Dropdown / Dialog -->
+                <div class="profile-menu hidden" id="profile-menu">
+                    <button class="profile-menu-item" id="btn-profile">
+                        <i class="bx bx-user"></i>
+                        My Profile
+                    </button>
+
+                    <button class="profile-menu-item" id="btn-settings">
+                        <i class="bx bx-cog"></i>
+                        Settings
+                    </button>
+
+                    <div class="menu-divider"></div>
+
+                    <button class="profile-menu-item logout" id="btn-logout">
+                        <i class="bx bx-log-out"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-box">
+            <!-- LEFT MENU -->
+            <aside class="leftpanel">
+                <div class="menu">
+                    <button class="menu-item active" href=".hero">
+                        <span class="caret">▾</span> Overview
+                    </button>
+                    <button class="menu-item" href=".explore-grid">Explore</button>
+                    <button class="menu-item" href=".Notes">Notes</button>
+                    <button class="menu-item" href=".PlaceToVisit">Places to visit</button>
+                    <button class="menu-item muted" href=".itinerary-section">
+                        Itinerary
+                    </button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="content">
+                <!-- HERO -->
+                <section class="hero">
+                    <img class="hero-img" src="./assets/hero.jpg" alt="" />
+                    <div class="hero-card">
+                        <h1 id="tripTitle">Trip to Rishikesh</h1>
+
+                        <div class="hero-subrow">
+                            <!-- date picker trigger -->
+                            <div class="dates">
+                                <span class="cal" style="display: flex;"><svg width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor"
+                                            stroke-width="1.5" fill="none" />
+                                        <path d="M3 9h18" stroke="currentColor" stroke-width="1.5"
+                                            stroke-linecap="round" />
+                                        <path d="M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.5"
+                                            stroke-linecap="round" />
+                                        <!-- small squares -->
+                                        <rect x="6.2" y="11.5" width="2.5" height="2.5" fill="currentColor" />
+                                        <rect x="10.75" y="11.5" width="2.5" height="2.5" fill="currentColor" />
+                                        <rect x="15.3" y="11.5" width="2.5" height="2.5" fill="currentColor" />
+                                        <rect x="6.2" y="15.2" width="2.5" height="2.5" fill="currentColor" />
+                                        <rect x="10.75" y="15.2" width="2.5" height="2.5" fill="currentColor" />
+                                        <rect x="15.3" y="15.2" width="2.5" height="2.5" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <span class="muted">Add trip dates</span>
+                            </div>
+
+                            <!-- owner + collaborators + buttons -->
+                            <div class="hero-actions">
+                                <!-- logged-in user initial -->
+                                <div class="pill-avatar self-avatar" id="hero-owner-avatar">
+                                    D
+                                </div>
+
+                                <!-- extra collaborators will be rendered here -->
+                                <div class="collab-avatars" id="collab-avatars"></div>
+
+                                <button class="tiny-icon" id="btn-add-member" title="Add tripmate">
+                                    👤+
+                                </button>
+                                <button class="tiny-icon" id="hero-more-btn" title="More options">
+                                    ⋯
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Explore header -->
+                <section class="row-head">
+                    <div class="row-head-left">
+                        <span class="caret">▾</span>
+                        <span class="head-title">Explore</span>
+                    </div>
+
+                    <button class="browse-btn">
+                        <span class="search">🔍</span>
+                        Browse all
+                    </button>
+                </section>
+
+                <!-- Explore cards -->
+                <section class="explore-grid" id="exploreGrid">
+                    <!-- JS inject -->
+                </section>
+
+                <!-- Reservations + Budgeting small -->
+                <section class="two-cards">
+                    <div class="reservations">
+                        <div class="res-title">Reservations and attachments</div>
+
+                        <div class="res-items">
+                            <div class="res-item" data-expense-category="Flight">
+                                <div class="res-ico">
+                                    <!-- vertical bar icon -->
+                                    <svg width="29" height="24" viewBox="0 0 29 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <rect width="28.05" height="23.1" fill="url(#pattern0_33_84)" />
+                                        <defs>
+                                            <pattern id="pattern0_33_84" patternContentUnits="objectBoundingBox"
+                                                width="1" height="1">
+                                                <use xlink:href="#image0_33_84"
+                                                    transform="matrix(0.0161476 0 0 0.0196078 -0.00865054 0)" />
+                                            </pattern>
+                                            <image id="image0_33_84" width="63" height="51" preserveAspectRatio="none"
+                                                xlink:href="data:image/png;base64,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" />
+                                        </defs>
+                                    </svg>
+                                </div>
+                                <div class="res-lbl">Flight</div>
+                            </div>
+
+                            <div class="res-item" data-expense-category="Lodging">
+                                <div class="res-ico">
+                                    <svg width="29" height="20" viewBox="0 0 29 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <rect width="28.05" height="19.8" fill="url(#pattern0_33_82)" />
+                                        <defs>
+                                            <pattern id="pattern0_33_82" patternContentUnits="objectBoundingBox"
+                                                width="1" height="1">
+                                                <use xlink:href="#image0_33_82"
+                                                    transform="matrix(0.0156863 0 0 0.0222222 -0.00196078 0)" />
+                                            </pattern>
+                                            <image id="image0_33_82" width="64" height="45" preserveAspectRatio="none"
+                                                xlink:href="data:image/png;base64,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" />
+                                        </defs>
+                                    </svg>
+                                </div>
+                                <div class="res-lbl">Lodging</div>
+                            </div>
+
+                            <div class="res-item" data-expense-category="Rental car">
+                                <div class="res-ico">
+                                    <!-- car icon -->
+                                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <rect width="24.75" height="23.1" fill="url(#pattern0_33_80)" />
+                                        <defs>
+                                            <pattern id="pattern0_33_80" patternContentUnits="objectBoundingBox"
+                                                width="1" height="1">
+                                                <use xlink:href="#image0_33_80"
+                                                    transform="matrix(0.0176101 0 0 0.0188679 -0.0018868 0)" />
+                                            </pattern>
+                                            <image id="image0_33_80" width="57" height="53" preserveAspectRatio="none"
+                                                xlink:href="data:image/png;base64,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" />
+                                        </defs>
+                                    </svg>
+                                </div>
+                                <div class="res-lbl">Rental car</div>
+                            </div>
+
+                            <div class="res-item" data-expense-category="Restaurant">
+                                <div class="res-ico">
+                                    <!-- fork & knife -->
+                                    <svg width="22" height="25" viewBox="0 0 22 25" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <rect width="21.45" height="24.75" fill="url(#pattern0_33_76)" />
+                                        <defs>
+                                            <pattern id="pattern0_33_76" patternContentUnits="objectBoundingBox"
+                                                width="1" height="1">
+                                                <use xlink:href="#image0_33_76"
+                                                    transform="matrix(0.0204082 0 0 0.0176871 0 -0.00408165)" />
+                                            </pattern>
+                                            <image id="image0_33_76" width="49" height="57" preserveAspectRatio="none"
+                                                xlink:href="data:image/png;base64,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" />
+                                        </defs>
+                                    </svg>
+                                </div>
+                                <div class="res-lbl">Restaurant</div>
+                            </div>
+
+                            <div class="res-item" data-expense-category="Attachment">
+                                <div class="res-ico">
+                                    <!-- paperclip -->
+                                    <svg width="24" height="27" viewBox="0 0 24 27" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <rect width="23.1" height="26.4" fill="url(#pattern0_33_69)" />
+                                        <defs>
+                                            <pattern id="pattern0_33_69" patternContentUnits="objectBoundingBox"
+                                                width="1" height="1">
+                                                <use xlink:href="#image0_33_69"
+                                                    transform="matrix(0.0192308 0 0 0.0168269 0 -0.00480771)" />
+                                            </pattern>
+                                            <image id="image0_33_69" width="52" height="60" preserveAspectRatio="none"
+                                                xlink:href="data:image/png;base64,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" />
+                                        </defs>
+                                    </svg>
+                                </div>
+                                <div class="res-lbl">Attachment</div>
+                            </div>
+
+                            <div class="res-item" data-expense-category="Other">
+                                <div class="res-ico">
+                                    <!-- three dots -->
+                                    <svg width="24" height="6" viewBox="0 0 24 6" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="3" cy="3" r="3" fill="currentColor" />
+                                        <circle cx="12" cy="3" r="3" fill="currentColor" />
+                                        <circle cx="21" cy="3" r="3" fill="currentColor" />
+                                    </svg>
+
+                                </div>
+                                <div class="res-lbl">Other</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="budget-mini">
+                        <div class="bm-title">Budgeting</div>
+                        <div class="bm-amt">₹0.00</div>
+                        <div class="bm-link">View details</div>
+                    </div>
+                </section>
+
+                <!-- Notes -->
+                <section class="section Notes">
+                    <div class="section-head">
+                        <div class="section-head-left">
+                            <span class="caret">▾</span> Notes
+                        </div>
+                        <div class="notes-head-actions">
+                            <button class="dots" id="notes-menu-btn">⋯</button>
+                            <div class="notes-menu hidden" id="notes-menu">
+                                <button data-action="clear">Clear notes</button>
+                                <button data-action="copy">Copy to clipboard</button>
+                                <button data-action="ai">Ask AI (soon)</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <textarea class="notes-box"
+                        placeholder="Write or paste anything here: how to get around, tips and tricks"></textarea>
+                </section>
+
+                <!-- Places to visit -->
+                <section class="section PlaceToVisit">
+                    <div class="section-head">
+                        <div class="section-head-left">
+                            <span class="caret">▾</span> Places to visit
+                        </div>
+                        <button class="dots">⋯</button>
+                    </div>
+
+                    <div class="places-input-row">
+                        <div class="places-input">
+                            <span class="pin">📍</span>
+                            <input id="place-search-input" type="text"
+                                placeholder="Search & add a place (Enter to search)" />
+                        </div>
+                        <button class="round-btn">▢</button>
+                        <button class="round-btn">≡</button>
+                    </div>
+
+                    <div class="recommended">
+                        <div class="rec-head">
+                            <span class="caret small">▾</span>
+                            <span class="muted">Recommended places</span>
+                        </div>
+
+                        <div class="rec-row">
+                            <div class="rec-cards" id="recCards">
+                                <!-- JS inject -->
+                            </div>
+                            <button class="rec-next">›</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- EXTRA LIST SECTION (Add a title e.g. "Restaurants") -->
+                <section class="section" id="extra-list-section">
+                    <div class="section-head">
+                        <span class="caret">▾</span>
+
+                        <!-- title input drives scope -->
+                        <input id="extra-list-title" class="section-title-input"
+                            placeholder='Add a title (e.g. "Restaurants")' />
+                    </div>
+
+                    <!-- search within this list -->
+                    <div class="places-input-row">
+                        <div class="places-input">
+                            <span class="pin">📍</span>
+                            <input type="text" id="extra-place-search"
+                                placeholder="Add a place (press Enter to search)" />
+                        </div>
+                    </div>
+
+                    <!-- recommended places from /api/places/recommended -->
+                    <div class="rec-head">
+                        <span>Recommended places</span>
+                    </div>
+
+                    <!-- 🔴 NEW: wrap in rec-row + rec-cards so it looks like the top carousel -->
+                    <div class="rec-row">
+                        <div class="rec-cards" id="extra-recommended-list"></div>
+                        <button class="rec-next" id="extra-rec-next">›</button>
+                    </div>
+
+                    <!-- places the user has added for this custom list (local only for now) -->
+                    <div class="rec-head" style="margin-top:12px;">
+                        <span>Saved in this list</span>
+                    </div>
+                    <div id="extra-selected-list"></div>
+                </section>
+
+                <div class="big-divider"></div>
+
+
+                <!-- Itinerary -->
+                <section class="section big itinerary-section" id="itinerarySection">
+                    <div class="big-head">
+                        <h2>Itinerary</h2>
+                        <button class="green-pill">📅 Add trip dates</button>
+                    </div>
+
+                    <div id="itineraryContainer">
+                        <div class="it-empty" id="itineraryEmpty">
+                            Your itinerary is empty. Select a start<br />
+                            and end date to organize your days<br />
+                            you can always change this later.
+                        </div>
+                    </div>
+                </section>
+
+                <div class="big-divider"></div>
+
+                <!-- Budgeting -->
+                <section class="section big" id="budgetSection">
+                    <div class="big-head">
+                        <h2>Budgeting</h2>
+                        <button class="green-pill" id="btn-add-expense">
+                            ＋ Add expense
+                        </button>
+                    </div>
+
+                    <div class="budget-box">
+                        <div class="budget-left">
+                            <div class="budget-total">₹0.00</div>
+
+                            <div class="budget-actions">
+                                <button class="soft-pill" id="btn-set-budget">
+                                    ✏️ Set budget
+                                </button>
+                                <button class="soft-pill" id="btn-group-balances">
+                                    🧾 Group balances
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="budget-right">
+                            <div class="budget-link">📊 View breakdown</div>
+                            <div class="budget-link">👥 Add tripmate</div>
+                            <div class="budget-link">⚙️ Settings</div>
+                        </div>
+                    </div>
+
+                    <div class="expenses-head">
+                        <div class="expenses-left">
+                            <span class="caret">▾</span> Expenses
+                        </div>
+                        <div class="expenses-sort muted">
+                            Sort: <b>Date (newest first)</b> ▾
+                        </div>
+                    </div>
+
+                    <div id="expensesList" class="muted small-gap">
+                        You haven't added any expenses yet.
+                    </div>
+                </section>
+
+                <div style="height: 40px"></div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Reservation / expense modal -->
+    <div id="reservation-modal" class="modal-backdrop hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="reservation-modal-title">Add reservation</h3>
+                <button class="modal-close" id="reservation-close-btn">✕</button>
+            </div>
+
+            <p class="modal-subtitle">
+                This will also add an expense into your trip budgeting.
+            </p>
+
+            <form id="reservation-form">
+                <div class="modal-field">
+                    <label>Category</label>
+                    <input type="text" id="reservation-category" readonly />
+                </div>
+
+                <div class="modal-field">
+                    <label>Title / reference</label>
+                    <input type="text" id="reservation-title" placeholder="e.g. Indigo flight 6E-1234" />
+                </div>
+
+                <div class="modal-field">
+                    <label>Amount (₹)</label>
+                    <input type="number" id="reservation-amount" min="0" step="0.01" />
+                </div>
+
+                <div class="modal-field">
+                    <label>Date</label>
+                    <input type="date" id="reservation-date" />
+                </div>
+
+                <div class="modal-field">
+                    <label>Notes</label>
+                    <textarea id="reservation-notes" rows="2"
+                        placeholder="Booking site, PNR, check-in time, etc."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-ghost" id="reservation-cancel-btn">Cancel</button>
+                    <button type="submit" class="btn-primary">Save & add expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Firebase Core SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <!-- Firebase Auth -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCiGVhuR5Uu_veoBjLD3fg7Abc4OFeQjo",
+            authDomain: "milan-4590e.firebaseapp.com",
+            projectId: "milan-4590e",
+            storageBucket: "milan-4590e.appspot.com",
+            messagingSenderId: "id",
+            appId: "appid",
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script src="./planTrip.js"></script>
+</body>
+
+</html>

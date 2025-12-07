@@ -28,7 +28,7 @@ const itineraries = [
   {
     title: "India Getaway (Golden Triangle)",
     description: "A cultural journey across Delhi, Jaipur & Agra with forts, food, and heritage walks.",
-    duration: "10 Days, 9 Nights",\
+    duration: "10 Days, 9 Nights",
     category: "recent",
     imagePath: "trip/GT.png", // Path from your screenshot
     highlights: ["Taj Mahal", "Amber Fort", "Qutub Minar"],

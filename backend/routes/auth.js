@@ -24,4 +24,20 @@ router.post("/verify", async (req, res) => {
   }
 });
 
+
+router.post("/logout", async (req, res) => {
+  try {
+    const { idToken } = req.body;
+    if (!idToken) return res.status(400).json({ success: false, message: "idToken required" });
+
+    const decoded = await admin.auth().verifyIdToken(idToken);
+    await admin.auth().revokeRefreshTokens(decoded.uid);
+
+    return res.json({ success: true, message: "Logged out successfully" });
+  } catch (err) {
+    console.error("Logout error:", err);
+    res.status(500).json({ success: false, message: "Logout failed" });
+  }
+});
+
 module.exports = router;
